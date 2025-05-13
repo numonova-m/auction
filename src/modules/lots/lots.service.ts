@@ -29,9 +29,9 @@ export class LotsService {
   }
   async getOneBook(name_book: string) {
     const getOneBook = await this.lotRepo.find({
-      where: { book_name: name_book },
+      where: { book_name:name_book },
     });
-    if (getOneBook.length == 0)
+    if (getOneBook.length==0)
       throw new NotFoundException('bunday kitob mavjud emas');
     else
       return {
@@ -47,8 +47,8 @@ export class LotsService {
       throw new NotFoundException('bunday muallif mavjud emas');
     else
       return {
-        message: `${getOneAutor.length}dona kitob mavjud`,
-        book: getOneAutor,
+        message: `${name_autor}ning quyidagi kitoblari mavjud`,
+        books: getOneAutor,
       };
   }
   async updateBook(id: number, book?: CreateLotDto) {
