@@ -17,12 +17,12 @@ export class UsersController {
   async create(@Body() user: CreateUserDto) {
     return this.usersService.createUsers(user);
   }
-  @Get('/allusers')
-  async allUsers() {
-    return this.usersService.getAll();
-  }
-  @Delete('/:id')
-  async deleteUser(@Param('id') id: number) {
-    return await this.usersService.deleteUser(id);
-  }
+  // @Get('/allusers')
+  // async allUsers() {
+  //   return this.usersService.getAll();
+  // }
+  // @Delete('/:id')
+  // async deleteUser(@Param('id') id: number) {
+  //   return await this.usersService.deleteUser(id);
+  // }
 }

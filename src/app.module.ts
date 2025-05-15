@@ -4,6 +4,7 @@ import { LotsModule } from './modules/lots/lots.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -32,6 +33,20 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       },
       inject: [ConfigService],
     }),
+    JwtModule.registerAsync({
+      imports:[ConfigModule],
+      global:true,
+      useFactory:(configService:ConfigService)=>{
+        return {
+
+          secret:configService.get('JWT_KEY'),
+          signOptions:{
+            expiresIn:'1h'
+          }
+        }
+      },
+      inject:[ConfigService]
+    })
   ],
   controllers: [],
   providers: [],

@@ -1,26 +1,59 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { UsersService } from '../users/users.service';
+import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { ConfigService } from '@nestjs/config';
+import { LoginAuthDto } from './dto/login-auth.dto';
+import { emit } from 'process';
+import *as bcrypt from 'bcrypt'
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+ constructor( private readonly userService:UsersService,private readonly jwtService: JwtService,
+    private readonly configService:ConfigService
+ ){}
+async register(CreateUserDto:CreateUserDto){
+    const createUser = await this.userService.createUsers(CreateUserDto)
+    const payload = {user_id : createUser.id, user_role :createUser.role
+    }
+    const access_token = this.jwtService.sign(payload,{
+        expiresIn:'4h',
+        secret:this.configService.get('JWT_KEY')
+    
+    })
+    return{
+        message:"siz muvaffaqiyatli tizimga kirdingiz",
+data:{
+    email:createUser.email,
+    user:createUser.username
+},
+token:access_token
+    }
+}
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+async getByEmail(loginAuthDto:LoginAuthDto){
+    const findUser=await this.userService.getByEmail(loginAuthDto.email);
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+if(!findUser)
+    throw new BadRequestException('Parol yoki email xato!!!')
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
+const comparePassword = await bcrypt.compare(loginAuthDto.password,findUser.password)
+if(!comparePassword) throw new BadRequestException('Parol yoki email xato!!!')
+     const payload = {user_id : findUser.id, user_role :findUser.role
+    }
+    const access_token = this.jwtService.sign(payload,{
+        expiresIn:'4h',
+        secret:this.configService.get('JWT_KEY')
+    
+    })
+    return{
+        message:"siz muvaffaqiyatli tizimga kirdingiz",
+data:{
+    email:findUser.email,
+    user:findUser.username
+},
+token:access_token
+    }
+}
 }

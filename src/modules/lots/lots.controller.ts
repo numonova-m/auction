@@ -23,6 +23,10 @@ export class LotsController {
   async getAll() {
     return await this.lotsService.getAllBook();
   }
+   @Get('/book/:name')
+  async getByBook(@Param('name') name: string) {
+    return await this.lotsService.getOneBook(name);
+  }
  
   @Get('/autor/:name')
   async getByAutor(@Param('name') name: string) {

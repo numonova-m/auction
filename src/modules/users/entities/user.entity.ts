@@ -9,4 +9,6 @@ export class User {
   email: string;
   @Column()
   password: string;
+  @Column({nullable:true,default:"user"})
+  role:string
 }
