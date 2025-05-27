@@ -7,7 +7,7 @@ export class Lot {
   @Column()
   book_name: string;
   @Column()
-  autor: string;
+  author: string;
   @Column()
   price: number;
 }

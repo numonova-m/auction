@@ -5,7 +5,7 @@ export class CreateLotDto {
   @IsNotEmpty({ message: 'kitob nomini kiritishingiz shart' })
   book_name: string;
   @IsNotEmpty({ message: 'kitob muallifini kiritishingiz shart' })
-  autor: string;
+  author: string;
   @IsNotEmpty({ message: "kitobning boshlang'ich narxini kiritishingiz shart" })
   @IsNumber()
   price: number;

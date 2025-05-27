@@ -1,14 +1,9 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import *as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
   constructor(
@@ -20,17 +15,20 @@ export class UsersService {
       throw new BadRequestException('Bu email allaqachon ro‘yxatdan o‘tgan.');
     }
 
-    const hashpassword = await bcrypt.hash(user.password,12)
-    const create = this.userRepo.create({...user,password: hashpassword,role:'user'
+    const hashpassword = await bcrypt.hash(user.password, 12);
+    const create = this.userRepo.create({
+      ...user,
+      password: hashpassword,
+      role: 'user',
     });
 
     const createUser = await this.userRepo.save(create);
     return createUser;
   }
-async getByEmail(email:string){
-  const findUser = await this.userRepo.findOne({where:{email:email}})
-return findUser
-}
+  async getByEmail(email: string) {
+    const findUser = await this.userRepo.findOne({ where: { email: email } });
+    return findUser;
+  }
 
   // async getAll() {
   //   const allUsers = await this.userRepo.find();
