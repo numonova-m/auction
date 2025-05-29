@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Bid } from 'src/modules/bids/entities/bid.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 @Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn('increment')
@@ -9,6 +10,8 @@ export class User {
   email: string;
   @Column()
   password: string;
-  @Column({nullable:true,default:"user"})
-  role:string
+  @Column({ nullable: true, default: 'user' })
+  role: string;
+  @OneToMany(() => Bid, (bid) => bid.user)
+  bids: Bid[];
 }

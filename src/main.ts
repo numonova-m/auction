@@ -5,11 +5,11 @@ import { ConfigService } from '@nestjs/config';
 import { LotsService } from './modules/lots/lots.service';
 import * as bcrypt from 'bcrypt';
 
-async function run() {
-  const parol = await bcrypt.hash('Malika05+', 12);
-  console.log(parol);
-}
-run();
+// async function run() {
+//   const parol = await bcrypt.hash('Malika05+', 12);
+//   console.log(parol);
+// }
+// run();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());

@@ -1,7 +1,9 @@
+import { Bid } from 'src/modules/bids/entities/bid.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -21,4 +23,6 @@ export class Lot {
   description?: string;
   @CreateDateColumn()
   createAt: Date;
+  @OneToMany(() => Bid, (bid) => bid.lot)
+  bids: Bid[];
 }
