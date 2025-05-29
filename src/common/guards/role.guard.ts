@@ -5,28 +5,40 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { Roles } from '../enums/roles.enum';
 import { Reflector } from '@nestjs/core';
-import { Role, ROLES_KEY } from '../decorators/roles.decorators';
+import { Roles, ROLES_KEY } from '../decorators/roles.decorators';
+import { Role } from '../enums/roles.enum';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
   canActivate(context: ExecutionContext): boolean {
-    const requiredRole = this.reflector.get<Roles>(
+    const requiredRoles = this.reflector.get<Role | Role[]>(
       ROLES_KEY,
       context.getHandler(),
     );
-    if (!requiredRole) {
+
+    // Role berilmagan bo‘lsa, ruxsat beramiz
+    if (!requiredRoles) {
       return true;
     }
+
     const req = context.switchToHttp().getRequest();
     const user = req.user;
-    console.log(user);
-    if (requiredRole.includes(user.role)) {
-      return true;
+    console.log('user:', user);
+
+    const userRole = user.role || user.user_role;
+
+    if (Array.isArray(requiredRoles)) {
+      if (requiredRoles.includes(userRole)) {
+        return true;
+      }
     } else {
-      throw new BadRequestException('Siz bunday qila olmaysiz');
+      if (requiredRoles === userRole) {
+        return true;
+      }
     }
+
+    throw new BadRequestException('Siz bunday qila olmaysiz');
   }
 }

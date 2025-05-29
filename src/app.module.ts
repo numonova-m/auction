@@ -5,7 +5,11 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
-
+import { extname } from 'path';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { join } from 'path';
+import { BidsModule } from './modules/bids/bids.module';
 @Module({
   imports: [
     UsersModule,
@@ -34,19 +38,19 @@ import { JwtModule } from '@nestjs/jwt';
       inject: [ConfigService],
     }),
     JwtModule.registerAsync({
-      imports:[ConfigModule],
-      global:true,
-      useFactory:(configService:ConfigService)=>{
+      imports: [ConfigModule],
+      global: true,
+      useFactory: (configService: ConfigService) => {
         return {
-
-          secret:configService.get('JWT_KEY'),
-          signOptions:{
-            expiresIn:'1h'
-          }
-        }
+          secret: configService.get('JWT_KEY'),
+          signOptions: {
+            expiresIn: '1h',
+          },
+        };
       },
-      inject:[ConfigService]
-    })
+      inject: [ConfigService],
+    }),
+    BidsModule,
   ],
   controllers: [],
   providers: [],

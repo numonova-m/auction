@@ -5,26 +5,27 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(readonly jwtservice: JwtService) {}
+  constructor(private readonly jwtService: JwtService) {}
+
   canActivate(context: ExecutionContext): boolean {
-    const request: any = context.switchToHttp().getRequest();
-    const token = request.headers.authorization?.split(' ')[1];
-    if (!token) {
-      throw new UnauthorizedException('invalid token');
+    const request = context.switchToHttp().getRequest();
+    const authHeader = request.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      throw new UnauthorizedException('Token yo‘q yoki noto‘g‘ri formatda');
     }
-    console.log(token);
+
+    const token = authHeader.split(' ')[1];
+
     try {
-      const verify = this.jwtservice.verify(token as string);
-      console.log(verify);
-      request.user = verify;
+      const payload = this.jwtService.verify(token);
+      request.user = payload;
       return true;
     } catch (error) {
-      console.log(error.message);
-      throw new UnauthorizedException(error.message);
+      throw new UnauthorizedException(error.message || 'Token noto‘g‘ri');
     }
   }
 }

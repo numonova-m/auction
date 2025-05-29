@@ -9,16 +9,19 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Lot } from './entities/lot.entity';
 import { Repository } from 'typeorm';
 import { retry } from 'rxjs';
+import { Multer } from 'multer';
 
 @Injectable()
 export class LotsService {
   constructor(
     @InjectRepository(Lot) private readonly lotRepo: Repository<Lot>,
   ) {}
-  async createBook(book: CreateLotDto) {
-    const newBook = this.lotRepo.create(book);
-    const createBook = await this.lotRepo.save(newBook);
-    return createBook;
+  async createBook(book: CreateLotDto, image: Express.Multer.File) {
+    const newBook = this.lotRepo.create({
+      ...book,
+      image: image.filename, // yoki image.path
+    });
+    return await this.lotRepo.save(newBook);
   }
   async getAllBook() {
     const AllBook = await this.lotRepo.find();
