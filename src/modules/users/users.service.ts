@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
@@ -30,23 +34,23 @@ export class UsersService {
     return findUser;
   }
 
-  // async getAll() {
-  //   const allUsers = await this.userRepo.find();
-  //   if (allUsers.length == 0) {
-  //     throw new BadRequestException('foydalanuvchi mavjud emas');
-  //   } else {
-  //     return { message: `${allUsers.length}ta foydalanuvchi mavjud`, allUsers };
-  //   }
-  // }
-  // async deleteUser(id: number) {
-  //   const user = await this.userRepo.findOne({ where: { id } });
-  //   if (!user) {
-  //     throw new NotFoundException('bunday foydalanuvchi mavjud emas');
-  //   }
-  //   const deleteUser = await this.userRepo.delete({ id: id });
-  //   return {
-  //     message: "foydalanuvchi o'chirildi",
-  //     data: user,
-  //   };
-  // }
+  async getAll() {
+    const allUsers = await this.userRepo.find();
+    if (allUsers.length == 0) {
+      throw new BadRequestException('foydalanuvchi mavjud emas');
+    } else {
+      return { message: `${allUsers.length}ta foydalanuvchi mavjud`, allUsers };
+    }
+  }
+  async deleteUser(id: number) {
+    const user = await this.userRepo.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('bunday foydalanuvchi mavjud emas');
+    }
+    const deleteUser = await this.userRepo.delete({ id: id });
+    return {
+      message: "foydalanuvchi o'chirildi",
+      data: user,
+    };
+  }
 }

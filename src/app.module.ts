@@ -5,11 +5,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
-import { extname } from 'path';
-import { MulterModule } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { join } from 'path';
 import { BidsModule } from './modules/bids/bids.module';
+import { TimerModule } from './modules/timer/timer.module';
 @Module({
   imports: [
     UsersModule,
@@ -51,6 +48,7 @@ import { BidsModule } from './modules/bids/bids.module';
       inject: [ConfigService],
     }),
     BidsModule,
+    TimerModule,
   ],
   controllers: [],
   providers: [],
