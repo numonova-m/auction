@@ -4,12 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateLotDto } from './dto/create-lot.dto';
-import { UpdateLotDto } from './dto/update-lot.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Lot } from './entities/lot.entity';
 import { Repository } from 'typeorm';
-import { retry } from 'rxjs';
-import { Multer } from 'multer';
+import { MoreThan } from 'typeorm';
+import { parse } from 'date-fns';
+import { time } from 'console';
 
 @Injectable()
 export class LotsService {
@@ -17,12 +17,34 @@ export class LotsService {
     @InjectRepository(Lot) private readonly lotRepo: Repository<Lot>,
   ) {}
   async createBook(book: CreateLotDto, image: Express.Multer.File) {
-    const newBook = this.lotRepo.create({
+    const parsedEndTime = parse(book.endTime, 'dd-MM-yyyy, HH:mm', new Date());
+
+    if (isNaN(parsedEndTime.getTime())) {
+      throw new BadRequestException('endTime noto‘g‘ri formatda kiritildi');
+    }
+    const oneDayLater = Date.now() + 24 * 60 * 60 * 1000;
+
+    if (parsedEndTime.getTime() < oneDayLater) {
+      throw new BadRequestException("Muddat 1 kundan kam bo'lmasligi kerak");
+    }
+
+    const newLot = this.lotRepo.create({
       ...book,
-      image: image.filename, // yoki image.path
+      image: image.filename,
+      endTime: parsedEndTime,
     });
-    return await this.lotRepo.save(newBook);
+
+    return await this.lotRepo.save(newLot);
   }
+
+  async getActiveBooks() {
+    const now = new Date();
+    const activeLots = await this.lotRepo.find({
+      where: { endTime: MoreThan(now) },
+    });
+    return activeLots;
+  }
+
   async getAllBook() {
     const AllBook = await this.lotRepo.find();
     return {

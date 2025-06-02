@@ -1,4 +1,5 @@
 import { Bid } from 'src/modules/bids/entities/bid.entity';
+import { Result } from 'src/modules/result/entities/result.entity';
 import {
   Column,
   CreateDateColumn,
@@ -25,4 +26,8 @@ export class Lot {
   createAt: Date;
   @OneToMany(() => Bid, (bid) => bid.lot)
   bids: Bid[];
+  @Column()
+  endTime: Date;
+  @OneToMany(() => Result, (result) => result.lotName)
+  result: Result[];
 }

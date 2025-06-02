@@ -1,4 +1,5 @@
 import { Bid } from 'src/modules/bids/entities/bid.entity';
+import { Result } from 'src/modules/result/entities/result.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 @Entity({ name: 'users' })
 export class User {
@@ -14,4 +15,6 @@ export class User {
   role: string;
   @OneToMany(() => Bid, (bid) => bid.user)
   bids: Bid[];
+  @OneToMany(() => Result, (result) => result.winnerUser)
+  result: Result[];
 }

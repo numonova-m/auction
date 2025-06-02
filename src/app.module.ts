@@ -6,7 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { BidsModule } from './modules/bids/bids.module';
-import { TimerModule } from './modules/timer/timer.module';
+import { ResultModule } from './modules/result/result.module';
 @Module({
   imports: [
     UsersModule,
@@ -48,7 +48,7 @@ import { TimerModule } from './modules/timer/timer.module';
       inject: [ConfigService],
     }),
     BidsModule,
-    TimerModule,
+    ResultModule,
   ],
   controllers: [],
   providers: [],

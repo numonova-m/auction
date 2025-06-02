@@ -18,6 +18,8 @@ import { Role } from 'src/common/enums/roles.enum';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.Admin)
   @Post('/create')
   async create(@Body() user: CreateUserDto) {
     return this.usersService.createUsers(user);

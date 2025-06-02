@@ -1,4 +1,10 @@
-import { IsEmpty, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsDateString,
+  IsEmpty,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
 export class CreateLotDto {
   @IsString()
@@ -11,4 +17,7 @@ export class CreateLotDto {
   price: string;
   @IsString()
   description?: string;
+
+  @IsNotEmpty()
+  endTime: string;
 }
