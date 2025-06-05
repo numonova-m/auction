@@ -35,26 +35,4 @@ export class LotsController {
     const post = await this.lotsService.createBook(book, image);
     return { message: 'post yaratildi', post };
   }
-
-  @Get('/allbooks')
-  async getAll() {
-    return await this.lotsService.getAllBook();
-  }
-  @Get('/book/:name')
-  async getByBook(@Param('name') name: string) {
-    return await this.lotsService.getOneBook(name);
-  }
-
-  @Get('/autor/:name')
-  async getByAutor(@Param('name') name: string) {
-    return await this.lotsService.getOneByAutor(name);
-  }
-  @Put('/:id')
-  async updateBook(@Param('id') id: number, @Body() book?: CreateLotDto) {
-    return await this.lotsService.updateBook(id, book);
-  }
-  @Delete('/:id')
-  async deleteBook(@Param('id') id: number) {
-    return await this.lotsService.deleteBook(id);
-  }
 }

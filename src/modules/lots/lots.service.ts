@@ -22,7 +22,8 @@ export class LotsService {
     if (isNaN(parsedEndTime.getTime())) {
       throw new BadRequestException('endTime noto‘g‘ri formatda kiritildi');
     }
-    const oneDayLater = Date.now() + 24 * 60 * 60 * 1000;
+    const oneDayLater = Date.now();
+    // + 24 * 60 * 60 * 1000;
 
     if (parsedEndTime.getTime() < oneDayLater) {
       throw new BadRequestException("Muddat 1 kundan kam bo'lmasligi kerak");
@@ -32,9 +33,17 @@ export class LotsService {
       ...book,
       image: image.filename,
       endTime: parsedEndTime,
+      status: 'active',
     });
+    const savedLot = await this.lotRepo.save(newLot);
 
-    return await this.lotRepo.save(newLot);
+    // Har bir lot uchun timer o‘rnatamiz
+    const delay = parsedEndTime.getTime() - Date.now();
+    setTimeout(async () => {
+      await this.lotRepo.update({ id: savedLot.id }, { status: 'finished' });
+    }, delay);
+
+    return savedLot;
   }
 
   async getActiveBooks() {

@@ -6,6 +6,12 @@ import { ConfigService } from '@nestjs/config';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import * as bcrypt from 'bcrypt';
 
+// async function run() {
+//   const parool = await bcrypt.hash('Malika++05', 12);
+//   return parool;
+// }
+// run().then(console.log);
+
 @Injectable()
 export class AuthService {
   constructor(

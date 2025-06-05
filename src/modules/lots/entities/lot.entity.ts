@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -30,4 +31,8 @@ export class Lot {
   endTime: Date;
   @OneToMany(() => Result, (result) => result.lotName)
   result: Result[];
+  @Column()
+  status: string;
+  @ManyToOne(() => Bid, { nullable: true, eager: true })
+  lastBid: Bid;
 }
